@@ -10,6 +10,51 @@ FXOS SDK Desktop Application Example
 ![Screenshot 2021-06-11 23-51-04](https://user-images.githubusercontent.com/37045780/121765397-2411e580-cb10-11eb-9da3-4fe2e01c73a3.png)
 
 
+Below is the debug  output of the application running, the output match the debugging built into the application.
+
+```
+DebugOut("FXWinApp::FX_INIT_MESSAGE\r\n");
+```
+
+You can see that "FXWinApp::FX_INIT_MESSAGE" below.
+
+```
+k_exec_launchProcess:/
+k_exec_createProcess::processProc:090000
+k_exec_createProcess::k_exec_get_current_process:101448
+Enter k_attach_process_events
+eventProcedure:090000
+        Process:1073B8
+k_attach_process_events::@index:00003
+k_getevents @1
+
+FXWinApp::FX_INIT_MESSAGE
+
+k_user_CreateWindowClass::already-registered:fxWinAppWindowClass
+
+FXWinApp::CreateWindowClassEx
+
+k_user_CreateWindow:Test Application
+Process Id:0000040963
+k_user_CreateWindow:k_add_child_window:z:0000000008
+WinApp::FX_CREATE_WINDOW
+
+FXWinApp::CreateWindow
+
+k_attach_process_events::k_exec_set_current_process:000000
+ProcessWindowEvent RECEIVED:FX_FOCUS_WINDOW
+*** ProcessWindowEvent::FX_FOCUS_LOST:105FE8
+DefWndProc::defPrcData[create]:pMsg->hwnd:1075A8
+DefWindowProc::FX_FOCUS_WINDOW:Test Application
+DefWindowProc::FX_FOCUS_WINDOW:k_nodelist_remove_obj:NO CURRENT NODE
+DefWindowProc::FX_FOCUS_WINDOW:CLICK Z:0000000009
+DefWindowProc::FX_FOCUS_LOST:FX DISK1
+DefWindowProc::FX_DRAW_NONCLIENT
+
+WinApp::FX_DRAW_WINDOW
+
+```
+
 ## Build
 
 ```
