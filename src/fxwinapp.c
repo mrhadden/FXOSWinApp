@@ -24,7 +24,6 @@ VOID FXWinMain(PFXOSMESSAGE pMsg)
 				DebugOut("FXWinApp::FX_INIT_MESSAGE\r\n");
 
 				CreateWindowClassEx("fxWinAppWindowClass",NULL,0,FXWSX_ALWAYS_BACKPLANE,NULL,NULL,NULL,WinAppWindowProc);
-
 				DebugOut("FXWinApp::CreateWindowClassEx\r\n");
 
 				hWndInstance = CreateWindow(FXWS_THICKFRAME | FXWS_CAPTION | FXWS_VISIBLE | FXWS_SYSMENU | FXWS_POPUP,
@@ -34,7 +33,6 @@ VOID FXWinMain(PFXOSMESSAGE pMsg)
 											200,100,
 											GetDesktopWindow(),
 											NULL,NULL);
-
 				DebugOut("FXWinApp::CreateWindow\r\n");
 			}
 			break;
@@ -49,7 +47,6 @@ VOID FXWinMain(PFXOSMESSAGE pMsg)
 			break;
 		}
 	}
-
 	return;
 }
 
@@ -74,27 +71,8 @@ BOOL WinAppWindowProc(PFXOSMESSAGE pMsg)
 			break;
 		case FX_DRAW_WINDOW:
 			DebugOut("WinApp::FX_DRAW_WINDOW\r\n");
-			/*
-			pWin = k_getWindowFromHandle(pMsg->hwnd);
-			if(pWin)
-			{
-				k_vdma_fill_rect_ex(pWin->clientRect.x,
-									pWin->clientRect.y,
-									pWin->clientRect.width,
-									pWin->clientRect.height,
-									BRUSHCOLOR(pWin->hBackground),
-									pWin->nBitmapLayer);
-
-			}
-			*/
 			break;
 		case FX_LBUTTON_DOWN:
-			/*
-			pWin = k_getWindowFromHandle(pMsg->hwnd);
-			if(pWin)
-			{
-			}
-			*/
 			return TRUE;
 		default:
 			break;
