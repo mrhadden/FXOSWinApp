@@ -33,8 +33,10 @@ SET JAVABIN="%JAVA_HOME%\bin\java.exe"
 
 SET CURDIR=%~dp0
 SET CCTEMP=%TEMP%
+SET FXINC=%CURDIR%INCLUDES
 SET FXLIB=%CURDIR%LIB
-SET WDC_INC_65816=G:\devtools\WDCTools\wdc\Tools\include
+SET DIST=%CURDIR%DIST
+SET WDC_INC_65816=G:\devtools\WDCTools\wdc\Tools\include;%FXINC%
 SET WDC_INC_6502=G:\devtools\WDCTools\wdc\Tools\include
 SET WDC_LIB=G:\devtools\WDCTools\wdc\Tools\lib;%FXLIB%
 
@@ -105,7 +107,7 @@ CD .\SRC
 %COMPILER% %INCLUDES% %OPTIONS% -Ofxwinapp.s fxwinapp.c
 %ASSEMBLER% %ASM_OPTIONS% fxwinapp.s -o fxwinapp.obj
 
-%LINKER% %LINK_OPT% -HB fxwinapp.obj -LFXUSER -LCL -O %KERNELNAME%.BIN
+%LINKER% %LINK_OPT% -HB fxwinapp.obj -LFXUSER -LCL -O %DIST%\%KERNELNAME%.BIN
 
 TYPE %KERNELNAME%.MAP
 
