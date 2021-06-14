@@ -1,5 +1,9 @@
 @echo off
 
+REM
+REM https://www.westerndesigncenter.com/wdc/tools.php
+REM
+
 SET JAVA_HOME=
 
 SET KERNELNAME=FXWINAPP
@@ -40,18 +44,28 @@ SET WDC_INC_65816=G:\devtools\WDCTools\wdc\Tools\include;%FXINC%
 SET WDC_INC_6502=G:\devtools\WDCTools\wdc\Tools\include
 SET WDC_LIB=G:\devtools\WDCTools\wdc\Tools\lib;%FXLIB%
 
-SET SREC_DIR=G:\devprojects\c256feonix\tools
-
 SET COMPILER=G:\devtools\WDCTools\wdc\Tools\bin\wdc816cc.exe
-
 SET ASSEMBLER=G:\devtools\WDCTools\wdc\Tools\bin\wdc816AS.exe
-REM ASSEMBLER=G:\devtools\WDCTools\wdc\Tools\bin\WDC02AS.exe
+SET FXLINKER=%CURDIR%\fxlink.bat
 
 SET LINKER=G:\devtools\WDCTools\wdc\Tools\bin\wdcln.exe
 
-REM SET INCLUDES=-IG:\devprojects\6502
-
 SET INCLUDES=-I.
+
+REM -ML   Generates code for the Large model
+REM -MT   Force references to string data to be far. 
+REM -LT   Generates listing with embedded source statements. 
+REM -PX   Allows C++ style comments.
+REM -WO   Causes pointer/int conflicts to generate warnings rather than errors
+REM -WR   Warns if function return type does not match declared type.
+REM -A    Embeds C source statements into the assembly code.
+REM -BS   Generate source level debugging information. 
+REM -SO0S This option tells the compiler to assume that arrays are less than 64K in size
+REM       This option is automatically turned on when the -SO option is used. To use -SO without -SS, use -SO0S.
+REM -QV   Generates verbose information on memory usage. 
+REM -WA   Complains on arguments which do not match the prototype specification
+REM -WP   Generates a warning if a function is called without a prototype being defined for the function. 
+REM -WU   Warns about unused local variables. 
 
 SET ASM_OPTIONS=-DUSING_816 -DLARGE -V -l
 SET OPTIONS=-DUSE_FX256_FMX -DUSING_816 -DLARGE -ML -MT -LT -PX -WO -WR -A -BS -SO0S
@@ -108,7 +122,8 @@ CD .\SRC
 %ASSEMBLER% %ASM_OPTIONS% fxwinapp.s -o fxwinapp.obj
 
 %LINKER% %LINK_OPT% -HB fxwinapp.obj -LFXUSER -LCL -O %DIST%\%KERNELNAME%.BIN
+%FXLINKER% -i %DIST%\%KERNELNAME%.BIN -o %DIST%\%KERNELNAME%.EXE
 
-TYPE %KERNELNAME%.MAP
+TYPE %DIST%\%KERNELNAME%.MAP
 
 CD ..
