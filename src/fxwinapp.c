@@ -1,5 +1,3 @@
-
-
 #include "fxwinapp.h"
 
 static PWINDOW hWndInstance = NULL;
@@ -28,11 +26,12 @@ VOID FXWinMain(PFXOSMESSAGE pMsg)
 
 				hWndInstance = CreateWindow(FXWS_THICKFRAME | FXWS_CAPTION | FXWS_VISIBLE | FXWS_SYSMENU | FXWS_POPUP,
 											"fxWinAppWindowClass",
-											"Test Application",
+											"FX/OS Application",
 											100,100,
 											200,100,
 											GetDesktopWindow(),
 											NULL,NULL);
+
 				DebugOut("FXWinApp::CreateWindow\r\n");
 			}
 			break;
@@ -81,4 +80,3 @@ BOOL WinAppWindowProc(PFXOSMESSAGE pMsg)
 
 	return DefaultWindowProc(pMsg);
 }
-

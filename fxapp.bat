@@ -6,7 +6,8 @@ REM
 
 SET JAVA_HOME=
 
-SET KERNELNAME=FXWINAPP
+SET LOADBASE=0B0000
+SET KERNELNAME=FXAPP02
 
 SET BUILD=Y
 SET VERBOSE=
@@ -40,17 +41,17 @@ SET CCTEMP=%TEMP%
 SET FXINC=%CURDIR%INCLUDES
 SET FXLIB=%CURDIR%LIB
 SET DIST=%CURDIR%DIST
-SET WDC_INC_65816=G:\devtools\WDCTools\wdc\Tools\include;%FXINC%
-SET WDC_INC_6502=G:\devtools\WDCTools\wdc\Tools\include
+SET WDC_INC_65816=G:\devtools\WDCTools\wdc\Tools\include
+REM SET WDC_INC_6502=G:\devtools\WDCTools\wdc\Tools\include
 SET WDC_LIB=G:\devtools\WDCTools\wdc\Tools\lib;%FXLIB%
 
 SET COMPILER=G:\devtools\WDCTools\wdc\Tools\bin\wdc816cc.exe
 SET ASSEMBLER=G:\devtools\WDCTools\wdc\Tools\bin\wdc816AS.exe
-SET FXLINKER=%CURDIR%\fxlink.bat
+SET FXLINKER=CALL %CURDIR%\fxlink.bat
 
 SET LINKER=G:\devtools\WDCTools\wdc\Tools\bin\wdcln.exe
 
-SET INCLUDES=-I.
+SET INCLUDES=-I. -I%FXINC%
 
 REM -ML   Generates code for the Large model
 REM -MT   Force references to string data to be far. 
@@ -68,10 +69,10 @@ REM -WP   Generates a warning if a function is called without a prototype being 
 REM -WU   Warns about unused local variables. 
 
 SET ASM_OPTIONS=-DUSING_816 -DLARGE -V -l
-SET OPTIONS=-DUSE_FX256_FMX -DUSING_816 -DLARGE -ML -MT -LT -PX -WO -WR -A -BS -SO0S
+SET OPTIONS=-DUSE_FX256_FMX -DUSING_816 -DLARGE -ML -MT -LT -PX -WO -WR -A -BS -SO0S -QV
 SET ASM_OPT=-G -V -L -W
 
-SET LINK_OPT=-C090000,090000 -T -G -B -Q
+SET LINK_OPT=-C%LOADBASE%,%LOADBASE% -T -G -B -Q
 SET LIB_OPT=-A -S -V
 
 
@@ -122,8 +123,12 @@ CD .\SRC
 %ASSEMBLER% %ASM_OPTIONS% fxwinapp.s -o fxwinapp.obj
 
 %LINKER% %LINK_OPT% -HB fxwinapp.obj -LFXUSER -LCL -O %DIST%\%KERNELNAME%.BIN
-%FXLINKER% -i %DIST%\%KERNELNAME%.BIN -o %DIST%\%KERNELNAME%.EXE
+%FXLINKER% -i "%DIST%\%KERNELNAME%.BIN" -o "%DIST%\%KERNELNAME%.FXA" -v
+
+CD ..
 
 TYPE %DIST%\%KERNELNAME%.MAP
 
-CD ..
+
+
+
