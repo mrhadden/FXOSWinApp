@@ -9,8 +9,9 @@
 #define FXWINAPP_H_
 
 #include "fxtypes.h"
-#include "fxos.h"
-#include "fxuser.h"
+#include "ff.h"
+
+#include "FXOS_SDK.h"
 
 VOID FXWinMain(PFXOSMESSAGE pMsg);
 

@@ -39,7 +39,7 @@ VOID FXWinMain(PFXOSMESSAGE pMsg)
 			if(hWndInstance == NULL)
 			{
 				DebugOut("FXWinApp::FX_PROCESS\r\n");
-				TerminateProcess(proc->procId);
+				ProcessTerminate(proc->procId);
 			}
 			break;
 		default:

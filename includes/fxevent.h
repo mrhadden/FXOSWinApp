@@ -1,14 +1,8 @@
 
 #ifndef __FX_EVENT_MANAGER
-#define __FX_EVENT_MANAGER 
+#define __FX_EVENT_MANAGER
 
-#include "fxos.h"
-//#include "fxexec.h"
-//#include "fxnode.h"
-//#include "fxconsole.h"
-//#include "fxwindowmanager.h"
-
-//extern FXQUEUE FAR *_k_eventQueue;
+#include "fxtypes.h"
 
 typedef struct _fx_main_loopvars
 {
@@ -16,6 +10,7 @@ typedef struct _fx_main_loopvars
 }MAINLOOPARGS;
 
 #define FX_MSG_DEFAULT			(-1)
+#define FX_MSGATTR_FAST			(2)
 
 #define FX_COM1_DATA			(0xFC00)
 #define FX_COM2_DATA			(0xFC01)
@@ -43,7 +38,7 @@ typedef struct _fx_main_loopvars
 #define FX_WINDOW_CLOSE			(0xFBFF)
 
 #define FX_PROCESS				(0xFF00)
-#define FX_INIT_MESSAGE			(0xFF01)		
+#define FX_INIT_MESSAGE			(0xFF01)
 #define FX_UNINIT_MESSAGE		(0xFF02)
 
 #define FX_CREATE_WINDOW		(0xFF03)
@@ -67,9 +62,6 @@ typedef struct _fx_main_loopvars
 #define FX_MBUTTON_DRAG			(0x0F0D)
 #define FX_MBUTTON_UP			(0x0F0E)
 #define FX_MBUTTON_DBLCLICK	    (0x0F0F)
-
-//#define FX_MOUSE_SHOW			(0x0F10)
-
 
 #define FX_NC_MOUSE_HIDE		(0x8F00)
 #define FX_NC_MOUSE_ENTER		(0x8F01)
@@ -99,6 +91,7 @@ typedef struct _fx_main_loopvars
 #define FX_KEY_UP				(0x0F12)
 #define FX_FOCUS_WINDOW			(0x0F13)
 #define FX_FOCUS_LOST			(0x0F14)
+#define FX_KEY_SCANCODE			(0x0F15)
 
 
 #define FX_DISK_INSERT			(0x0F20)
@@ -112,7 +105,7 @@ typedef struct _fx_main_loopvars
 
 #define FX_MENU_SELECT	  		(0xF100)
 #define FX_MENU_SHOW	  		(0xF101)
-#define FX_MENU_HIDE	  		(0xF101)
+#define FX_MENU_HIDE	  		(0xF102)
 
 
 #define MSG_GETMOUSE_X(a)		(*(((INT*)&a->data[1])))
@@ -136,6 +129,9 @@ typedef struct _fx_main_loopvars
 #define CTL_MENU_SELECTED		(0x0001)
 #define CTL_BUTTON_SELECTED		(0x0002)
 #define CTL_MENU_CHECKED		(0x0003)
+#define CTL_MENU_CLOSE			(0x0004)
+#define CTL_MENU_HIGHLIGHT		(0x0005)
+#define CTL_MENU_UNHIGHLIGHT	(0x0006)
 
 #define FX_SCROLLBAR_COMMAND	(0xFA02)
 #define CTL_VERT_SCROLL			(0x0001)
@@ -162,6 +158,7 @@ typedef struct _fx_main_loopvars
 #define FX_PROCESS_OPL2L		(0xFFF7)
 #define FX_PROCESS_VDMA			(0xFFF8)
 #define FX_PROCESS_SDMA			(0xFFF9)
+//#define FX_PROCESS_EXCEPTION	(0xFFFA)
 
 
 #define ISPROCESSMSG(a)			(a & 0xF000)
@@ -187,6 +184,8 @@ typedef enum irq_event
 	IRQE_VDMA		= 14,
 	IRQE_SDMA		= 15,
 	IRQE_HDDRIVE	= 16,
+	IRQE_KEYBOARD_RAW=17,
+	IRQE_EXCEPTION	= 64,
 }MSGIRQ;
 
 
@@ -199,7 +198,7 @@ typedef struct _fxMouseMessageData
    unsigned char button2;
    unsigned char button3;
    unsigned char button4;
-   unsigned int x;			
+   unsigned int x;
    unsigned int y;
 }MOUSEMSGDATA;
 typedef MOUSEMSGDATA FAR *PMOUSEMSGDATA;
@@ -208,10 +207,21 @@ typedef MOUSEMSGDATA FAR *PMOUSEMSGDATA;
 //static PFXOSMESSAGE _k_eventQueue[255];
 
 typedef void (*FXEventProc)(PFXOSMESSAGE pmsg);
-#define FX_IDLEPROC_REG      (0x01)
-#define FX_IDLEPROC_UNREG	 (0x02)
-#define FX_IDLEPROC_PROCESS	 (0x04)
+#define FX_IDLEPROC_REG      		(0x01)
+#define FX_IDLEPROC_UNREG	 		(0x02)
+#define FX_IDLEPROC_PROCESS	 		(0x04)
 typedef void (*FXIDLEPROCESS)(UINT );
+
+typedef union marshalled_data
+{
+	BYTE	byteValue;
+	BYTE 	verbValue[2];
+	UINT  	intValue;
+	ULONG 	longValue;
+	LPVOID 	pointerValue;
+}
+MARSHALDATA;
+typedef MARSHALDATA FAR *PMARSHALDATA;
 
 typedef struct _fx_eventProcess
 {
@@ -255,5 +265,19 @@ typedef struct _fxos_eventmanager_vtable
 }
 EVENTMANAGER;
 typedef EVENTMANAGER FAR *PEVENTMANAGER;
+
+
+
+
+typedef struct _k_clipboard_data
+{
+	BYTE 	type;
+	CHAR	readable[16];
+	LPVOID  data;
+}
+CLIPBOARD_DATA;
+typedef CLIPBOARD_DATA FAR *PCLIPBOARD_DATA;
+typedef PCLIPBOARD_DATA HCLIP;
+
 
 #endif

@@ -75,11 +75,7 @@ SET ASM_OPT=-G -V -L -W
 SET LINK_OPT=-C%LOADBASE%,%LOADBASE% -T -G -B -Q
 SET LIB_OPT=-A -S -V
 
-
 SET LIBS=-LG:\devtools\WDCTools\wdc\Tools\lib
-
-SET TASSDIR=G:\devprojects\c256feonix\kernel-builds\Kernel-Trinity-11-Cleaned-up
-
 
 IF [%CLEAN%] == [Y] ( 
 	del /q srec.out
@@ -122,8 +118,9 @@ CD .\SRC
 %COMPILER% %INCLUDES% %OPTIONS% -Ofxwinapp.s fxwinapp.c
 %ASSEMBLER% %ASM_OPTIONS% fxwinapp.s -o fxwinapp.obj
 
-%LINKER% %LINK_OPT% -HB fxwinapp.obj -LFXUSER -LCL -O %DIST%\%KERNELNAME%.BIN
+%LINKER% %LINK_OPT% -HB fxwinapp.obj -LFXKERNEL -LFXDOS -LFXGUI -LCL -O %DIST%\%KERNELNAME%.BIN
 %FXLINKER% -i "%DIST%\%KERNELNAME%.BIN" -o "%DIST%\%KERNELNAME%.FXA" -v
+REM %FXLINKER% -i "%DIST%\%KERNELNAME%.BIN" -o "%DIST%\%KERNELNAME%.FXA" -v -pgx
 
 CD ..
 

@@ -15,6 +15,16 @@
 #define FAR far
 #endif
 
+#define EXPORT_FUNC_KERNEL(a)
+#define EXPORT_FUNC_GUI(a)
+#define EXPORT_FUNC_GFX(a)
+#define EXPORT_FUNC_CON(a)
+#define EXPORT_FUNC_DOS(a)
+
+#define EXPORT_TYPE_BEGIN(a)
+#define EXPORT_TYPE_END(a)
+#define EXPORT_STRING(a,b)
+
 #define	THROW_EXCEPTION(a,b,c)	{asm BRK;}
 
 
@@ -31,17 +41,33 @@
 #endif
 
 typedef void VOID;
-typedef void FAR *LPVOID;
+typedef VOID FAR *LPVOID;
 //#ifndef UINT8
 //typedef unsigned char UINT8;
 //#define UINT8
 //#endif
+#ifndef TCHAR
+#define TCHAR(a) a
+#endif
+
+//
+// byte sized types
+//
+typedef unsigned char UINT_8;
+typedef UINT_8 FAR *PUINT_8;
+typedef unsigned int  UINT_16;
+typedef UINT_16 FAR *PUINT_16;
+typedef unsigned long UINT_32;
+typedef UINT_32 FAR *PUINT_32;
+
 typedef char  CHAR;
 typedef CHAR FAR *LPCHAR;
 typedef CHAR FAR *LPSTR;
 typedef const CHAR FAR *LPCSTR;
 typedef const CHAR FAR *LPWCSTR;
 typedef unsigned char UCHAR;
+typedef UCHAR FAR *PUCHAR;
+typedef volatile UCHAR FAR *IOPORT;
 typedef unsigned char BYTE;
 typedef unsigned char *PBYTE;
 typedef int  WORD;
@@ -63,7 +89,7 @@ typedef unsigned long DWORD;
 //#endif
 typedef unsigned char  BOOL;
 typedef BOOL FAR *LPBOOL;
-typedef UCHAR FAR *PFAR;
+//typedef UCHAR FAR *PFAR;
 
 typedef UCHAR uint8_t;
 typedef ULONG uint32_t;
@@ -72,6 +98,13 @@ typedef LPVOID HPOINTER;
 typedef LPVOID HDC;
 typedef LPVOID HFONT;
 typedef LPVOID HCOLOR;
+typedef LPVOID HSTRINGTABLE;
+// UNICODE
+typedef UINT  WCHAR;
+typedef WCHAR FAR *LPWCHAR;
+//
+
+typedef DWORD HRESULT;
 
 
 typedef struct _fx_bytebits
@@ -201,6 +234,7 @@ typedef PROCESS_ID  	   MSGSRC;
 typedef PROCESS_ID  	   MSGDEST;
 typedef unsigned char  	   MSGDATA;
 
+#define FX_MSGSRC_DRIVER  	((MSGSRC)(-2))
 #define MAX_FXMSG_DATA 16
 
 typedef LPVOID HWND;
@@ -253,6 +287,7 @@ typedef struct _fx_eventMessage
 	LPVOID		pheap;
 	ULONG  		msgTime;
 	MSGDATA		data[MAX_FXMSG_DATA];
+	BYTE		attr;
 }FXOSMESSAGE;
 typedef FXOSMESSAGE FAR *PFXOSMESSAGE;
 
@@ -269,6 +304,7 @@ typedef struct _fx_cmdMessage
 	ULONG		parameter1;
 	ULONG		parameter2;
 	ULONG		parameter3;
+	BYTE		attr;
 }FXCMDMESSAGE;
 typedef FXCMDMESSAGE FAR *PFXCMDMESSAGE;
 
@@ -354,10 +390,188 @@ typedef struct _fxProcessMessage
 }FXPROCESSMESSAGE;
 typedef FXPROCESSMESSAGE FAR*PFXPROCESSMESSAGE;
 
-
-typedef unsigned char KEYCODE;
+typedef unsigned int  KEYCODE;
 typedef unsigned char SCANCODE;
 
+typedef struct _k_key_state
+{
+	BYTE 	scanCode;
+	BYTE 	isShifted;
+	BYTE	isAlt;
+	BYTE 	isExtended;
+	BYTE 	isCapsLock;
+	BYTE	isNumLock;
+	BYTE	isScrollLock;
+	KEYCODE	keyChar;
+	ULONG   scanTime;
+	BYTE 	ledStatus;
+}KEYSTATE;
+typedef KEYSTATE FAR* PKEYSTATE;
+
+#define FX_KEYCODE_ESC 			(0x0001)
+#define FX_KEYCODE_1 			(0x0002)
+#define FX_KEYCODE_2 			(0x0003)
+#define FX_KEYCODE_3 			(0x0004)
+#define FX_KEYCODE_4 			(0x0005)
+#define FX_KEYCODE_5 			(0x0006)
+#define FX_KEYCODE_6 			(0x0007)
+#define FX_KEYCODE_7 			(0x0008)
+#define FX_KEYCODE_8 			(0x0009)
+#define FX_KEYCODE_9 			(0x000A)
+#define FX_KEYCODE_0 			(0x000B)
+#define FX_KEYCODE_MINUS 		(0x000C)
+#define FX_KEYCODE_EQUAL 		(0x000D)
+#define FX_KEYCODE_BACKSPACE    (0x000E)
+#define FX_KEYCODE_TAB 			(0x000F)
+#define FX_KEYCODE_Q 			(0x0010)
+#define FX_KEYCODE_W 			(0x0011)
+#define FX_KEYCODE_E 			(0x0012)
+#define FX_KEYCODE_R 			(0x0013)
+#define FX_KEYCODE_T 			(0x0014)
+#define FX_KEYCODE_Y 			(0x0015)
+#define FX_KEYCODE_U 			(0x0016)
+#define FX_KEYCODE_I 			(0x0017)
+#define FX_KEYCODE_O 			(0x0018)
+#define FX_KEYCODE_P 			(0x0019)
+#define FX_KEYCODE_LEFT_SQUARE_BRACKET	(0x001A)
+#define FX_KEYCODE_RIGHT_SQUARE_BRACKET	(0x001B)
+#define FX_KEYCODE_ENTER 		(0x001C)
+#define FX_KEYCODE_LEFT_CTL 	(0x001D)
+#define FX_KEYCODE_A 			(0x001E)
+#define FX_KEYCODE_S 			(0x001F)
+#define FX_KEYCODE_D 			(0x0020)
+#define FX_KEYCODE_F 			(0x0021)
+#define FX_KEYCODE_G 			(0x0022)
+#define FX_KEYCODE_H 			(0x0023)
+#define FX_KEYCODE_J 			(0x0024)
+#define FX_KEYCODE_K 			(0x0025)
+#define FX_KEYCODE_L 			(0x0026)
+#define FX_KEYCODE_SEMI 		(0x0027)
+#define FX_KEYCODE_SQUOTE 		(0x0028)
+#define FX_KEYCODE_TICK 		(0x0029)
+#define FX_KEYCODE_LEFT_SHIFT 	(0x002A)
+#define FX_KEYCODE_BACKSLASH 	(0x002B)
+#define FX_KEYCODE_Z 			(0x002C)
+#define FX_KEYCODE_X 			(0x002D)
+#define FX_KEYCODE_C 			(0x002E)
+#define FX_KEYCODE_V 			(0x002F)
+#define FX_KEYCODE_B 			(0x0030)
+#define FX_KEYCODE_N 			(0x0031)
+#define FX_KEYCODE_M 			(0x0032)
+#define FX_KEYCODE_COMMA 		(0x0033)
+#define FX_KEYCODE_PERIOD 		(0x0034)
+#define FX_KEYCODE_SLASH 		(0x0035)
+#define FX_KEYCODE_RIGHT_SHIFT 	(0x0036)
+#define FX_KEYCODE_ASTERISK 	(0x0037)
+#define FX_KEYCODE_LEFT_ALT 	(0x0038)
+#define FX_KEYCODE_SPACE 		(0x0039)
+#define FX_KEYCODE_CAPLOCK 		(0x003A)
+#define FX_KEYCODE_F1 			(0x003B)
+#define FX_KEYCODE_F2 			(0x003C)
+#define FX_KEYCODE_F3 			(0x003D)
+#define FX_KEYCODE_F4 			(0x003E)
+#define FX_KEYCODE_F5 			(0x003F)
+#define FX_KEYCODE_F6 			(0x0040)
+#define FX_KEYCODE_F7 			(0x0041)
+#define FX_KEYCODE_F8 			(0x0042)
+#define FX_KEYCODE_F9 			(0x0043)
+#define FX_KEYCODE_F10 			(0x0044)
+#define FX_KEYCODE_F11 			(0x0057)
+#define FX_KEYCODE_F12 			(0x0058)
+#define FX_KEYCODE_NUMLOCK 		(0x0045)
+#define FX_KEYCODE_SCROLLLOCK	(0x0046)
+#define FX_KEYCODE_PAD7 		(0x0047)
+#define FX_KEYCODE_PAD8 		(0x0048)
+#define FX_KEYCODE_PAD9 		(0x0049)
+#define FX_KEYCODE_PAD_MINUS 	(0x004A)
+#define FX_KEYCODE_PAD4 		(0x004B)
+#define FX_KEYCODE_PAD5 		(0x004C)
+#define FX_KEYCODE_PAD6 		(0x004D)
+#define FX_KEYCODE_PAD_PLUS 	(0x004E)
+#define FX_KEYCODE_PAD1 		(0x004F)
+#define FX_KEYCODE_PAD2 		(0x0050)
+#define FX_KEYCODE_PAD3 		(0x0051)
+#define FX_KEYCODE_PAD0 		(0x0052)
+#define FX_KEYCODE_PAD_DECIMAL 	(0x0053)
+
+#define FX_KEYCODE_RIGHT_OS			(0xE05C)
+#define FX_KEYCODE_LEFT_OS			(0xF05C)
+
+#define FX_KEYCODE_CUR_LEFT_DOWN 	(0xE05C)
+#define FX_KEYCODE_CUR_LEFT_UP	 	(0xF05C)
+
+#define FX_KEYCODE_CUR_RIGHT_DOWN 	(0xE05C)
+#define FX_KEYCODE_CUR_RIGHT_UP   	(0xF05C)
+
+#define FX_KEYCODE_CUR_UP_DOWN   	(0xE05C)
+#define FX_KEYCODE_CUR_UP_UP	 	(0xF05C)
+
+#define FX_KEYCODE_CUR_DOWN 	 	(0xE05C)
+#define FX_KEYCODE_CUR_DOWN_UP	 	(0xF05C)
+
+/*
+#define FX_KEYCODE_EX_ (0xE0,
+#define FX_KEYCODE_XXX (0x35) //(keypad) / pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x38) //right alt (or altGr) pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x47) //home pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x48) //cursor up pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x49) //page up pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x4B) //cursor left pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x4D) //cursor right pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x4F) //end pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x50) //cursor down pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x51) //page down pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x52) //insert pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x53) //delete pressed
+
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x2A,
+#define FX_KEYCODE_XXX (0xE0,
+#define FX_KEYCODE_XXX (0x37) //print screen pressed
+
+
+#define FX_KEYCODE_XXX (0x81) //escape released
+#define FX_KEYCODE_XXX (0x82) //1 released
+#define FX_KEYCODE_XXX (0x83) //2 released
+
+#define FX_KEYCODE_XXX (0x84) //3 released
+#define FX_KEYCODE_XXX (0x85) //4 released
+#define FX_KEYCODE_XXX (0x86) //5 released
+#define FX_KEYCODE_XXX (0x87) //6 released
+
+#define FX_KEYCODE_XXX (0x88) //7 released
+#define FX_KEYCODE_XXX (0x89) //8 released
+#define FX_KEYCODE_XXX (0x8A) //9 released
+#define FX_KEYCODE_XXX (0x8B) //0 (zero) released
+
+#define FX_KEYCODE_XXX (0x8C) //- released
+#define FX_KEYCODE_XXX (0x8D) //= released
+#define FX_KEYCODE_XXX (0x8E) //backspace released
+#define FX_KEYCODE_XXX (0x8F) //tab released
+
+*/
 
 typedef struct _fx_property
 {
@@ -380,8 +594,9 @@ union _24bitPointer
 
 
 #define L24BYTE(a) ((CHAR)(((LONG)(a))))
-#define M24BYTE(a) ((CHAR)(((ULONG)(a) >> 8) & 0xFF))
+#define M24BYTE(a) ((CHAR)(((ULONG)(a) >> 8)  & 0xFF))
 #define H24BYTE(a) ((CHAR)(((ULONG)(a) >> 16) & 0xFF))
+#define H32BYTE(a) ((CHAR)(((ULONG)(a) >> 24) & 0xFF))
 
 #define MAKEWORD(low, high) ( (WORD)((((WORD) (high)) << 8 )| ((BYTE)(low))) )
 #define MAKELONG(low, high) ( (LONG)((((LONG) (high)) << 16)| ((WORD)(low))) )
@@ -762,6 +977,55 @@ typedef struct _fx_ComBuffer
 	UCHAR 	buffer[256];
 }FXCOMBUFFER;
 typedef FXCOMBUFFER FAR* PFXCOMBUFFER;
+
+typedef struct _fx_resource_header
+{
+	CHAR 	magic[4];
+	BYTE	major;
+	BYTE	minor;
+	BYTE	type;
+	BYTE	reserved;
+	BYTE	resheaderSize;
+}FXRFHEADER;
+typedef FXRFHEADER FAR* PFXRFHEADER;
+
+typedef struct _fx_resource_header_font
+{
+	CHAR 	title[16];
+	BYTE	height;
+	BYTE	width;
+}FXRFHEADER_FONT;
+typedef FXRFHEADER_FONT FAR* PFXRFHEADER_FONT;
+
+#define FXRF_FONTDATA(a)	((PFXRFHEADER_FONT)((ULONG)(&a->resheaderSize) + 1L))
+
+typedef struct _fx_resource_string
+{
+	CHAR 	locale[2];
+	UINT	entries;
+}FXRFHEADER_STRING;
+typedef FXRFHEADER_STRING FAR* PFXRFHEADER_STRING;
+
+typedef struct _fx_resource_string_entry
+{
+	UINT	index;
+	UINT	length;
+	BYTE	data;
+}FXRFHEADER_STRING_ENTRY;
+typedef FXRFHEADER_STRING_ENTRY FAR* PFXRFHEADER_STRING_ENTRY;
+
+#define NEXT_STRING_TABLE_ENTRY(a)		(PFXRFHEADER_STRING_ENTRY)(((ULONG)&a->data) + ((ULONG)a->length))
+
+//	RESOURSE TYPES
+EXPORT_TYPE_BEGIN(RESOURCE_TYPE)
+#define RESOURCE_TYPE_BASE			(0)
+#define RESOURCE_TYPE_STRING		(RESOURCE_TYPE_BASE + 1)
+#define RESOURCE_TYPE_MENU			(RESOURCE_TYPE_BASE + 2)
+#define RESOURCE_TYPE_ICON			(RESOURCE_TYPE_BASE + 4)
+#define RESOURCE_TYPE_FONT			(RESOURCE_TYPE_BASE + 5)
+#define RESOURCE_TYPE_DRIVER		(RESOURCE_TYPE_BASE + 64)
+EXPORT_TYPE_END(RESOURCE_TYPE)
+
 //
 // Node List Types
 //
@@ -782,12 +1046,50 @@ typedef FXCOMBUFFER FAR* PFXCOMBUFFER;
 #define NL_TYPE_WINDOW_SHARED_MEM	0x0B
 #define NL_TYPE_WINDOW_CLIPBOARD	0x0C
 #define NL_TYPE_WINDOW_CLIPSCRAP	0x0D
+#define NL_TYPE_WINDOW_MENU_ACCEL  	0x0E
+#define NL_TYPE_WINDOW_STRING_TBL  	0x0F
 
-#define NL_TYPE_EVENT_IDLEPROC		0x10
+#define NL_TYPE_EVENT_IDLEPROC		0xF0
+#define NL_TYPE_EVENT_HI_IDLEPROC	0xF1
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
 #define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
+
+typedef void (*FOREACHNODE)(LPVOID ctx,LPVOID pdata);
+typedef BOOL (*FOREACHNODEUNTIL)(LPVOID ctx,LPVOID pdata);
+
+typedef struct _fx_string
+{
+	UINT   size;
+	int    pos;
+	LPCHAR buffer;
+}FXSTRING;
+typedef FXSTRING FAR *PFXSTRING;
+
+typedef struct _fx_ipc_port
+{
+	ULONG 		id;
+	BYTE 		type;
+	PFXSTRING	name;
+	ULONG 		time;
+	PFXQUEUE 	queue;
+	BYTE		reserved_1;
+}IPCPORT;
+typedef IPCPORT FAR *PIPCPORT;
+
+#define IPC_SYS_DEBUG			("@debug")
+#define IPC_SYS_DEBUG_HD		("@debughd")
+#define IPC_SYS_BROADCAST		("@broadcast")
+#define IPC_SYS_KEYBOARD		("@keyboard")
+#define IPC_SYS_MOUSE			("@mouse")
+#define IPC_SYS_CLIPBOARD		("@clipboard")
+#define IPC_SYS_ASYNCPROC		("@proc")
+
+
+
+
+#define KEYBOARD_TIMEOUT (50)
 
 #endif
