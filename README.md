@@ -1,5 +1,5 @@
 
-# FXOSWinApp
+# FX/OS Simple Minimum Application
 FXOS SDK Desktop Application Example
 
 **Under Construction**
