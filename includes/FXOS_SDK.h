@@ -9,10 +9,6 @@
 
 #include "fxtypes.h"
 
-#include "fxkernel.h"
-#include "fxevent.h"
-#include "fxgui.h"
-
 #include "FXOS_KERNEL_SDK.h"
 #include "FXOS_DOS_SDK.h"
 #include "FXOS_GUI_SDK.h"

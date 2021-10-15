@@ -1,6 +1,6 @@
 /*
  * FXOS_GFX_SDK.h
- * Created Jul 29, 2021 10:49:43 PM
+ * Created Oct 14, 2021 1:43:24 PM
  *
  */
 
@@ -320,6 +320,28 @@ void DrawPixelEx(long x,long y,char pcolor,UINT page);
 
 /*
 *
+* Name:DrawClippedPixel
+* Subsystem:GFX
+* Description: 
+* Arguments: 
+*
+*/
+typedef void (*DRAWCLIPPEDPIXEL)(PRECT,long,long,char,char);
+void DrawClippedPixel(PRECT prect,long x,long y,char pcolor,char mode);
+
+/*
+*
+* Name:DrawClippedPixelEx
+* Subsystem:GFX
+* Description: 
+* Arguments: 
+*
+*/
+typedef void (*DRAWCLIPPEDPIXELEX)(PRECT,long,long,char,char);
+void DrawClippedPixelEx(PRECT prect,long x,long y,char pcolor,char mode);
+
+/*
+*
 * Name:DrawPixelFront
 * Subsystem:GFX
 * Description: 
@@ -328,6 +350,28 @@ void DrawPixelEx(long x,long y,char pcolor,UINT page);
 */
 typedef void (*DRAWPIXELFRONT)(long,long,char);
 void DrawPixelFront(long x,long y,char pcolor);
+
+/*
+*
+* Name:DrawPixelFrontEx
+* Subsystem:GFX
+* Description: 
+* Arguments: 
+*
+*/
+typedef void (*DRAWPIXELFRONTEX)(long,long,char);
+void DrawPixelFrontEx(long x,long y,char pcolor);
+
+/*
+*
+* Name:DrawPixelBackEx
+* Subsystem:GFX
+* Description: 
+* Arguments: 
+*
+*/
+typedef void (*DRAWPIXELBACKEX)(long,long,char);
+void DrawPixelBackEx(long x,long y,char pcolor);
 
 /*
 *

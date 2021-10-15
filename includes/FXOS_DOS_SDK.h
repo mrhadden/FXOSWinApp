@@ -1,6 +1,6 @@
 /*
  * FXOS_DOS_SDK.h
- * Created Jul 29, 2021 10:49:43 PM
+ * Created Oct 14, 2021 1:43:24 PM
  *
  */
 
@@ -18,8 +18,8 @@
 * Arguments: 
 *
 */
-typedef HRESULT (*FILEOPEN)(FIL*,const TCHAR*,BYTE);
-HRESULT FileOpen(FIL* fp,const TCHAR* path,BYTE mode);
+typedef FILE (*FILEOPEN)(LPCSTR,BYTE);
+FILE FileOpen(LPCSTR path,BYTE mode);
 
 /*
 *
@@ -29,8 +29,8 @@ HRESULT FileOpen(FIL* fp,const TCHAR* path,BYTE mode);
 * Arguments: 
 *
 */
-typedef HRESULT (*FILECLOSE)(FIL*);
-HRESULT FileClose(FIL* fp);
+typedef HRESULT (*FILECLOSE)(FILE);
+HRESULT FileClose(FILE file);
 
 /*
 *
@@ -40,8 +40,8 @@ HRESULT FileClose(FIL* fp);
 * Arguments: 
 *
 */
-typedef HRESULT (*FILEREAD)(FIL*,void*,UINT,UINT*);
-HRESULT FileRead(FIL* fp,void* buff,UINT btr,UINT* br);
+typedef HRESULT (*FILEREAD)(FILE,void*,UINT,UINT*);
+HRESULT FileRead(FILE fp,void* buff,UINT btr,UINT* br);
 
 /*
 *
@@ -51,8 +51,8 @@ HRESULT FileRead(FIL* fp,void* buff,UINT btr,UINT* br);
 * Arguments: 
 *
 */
-typedef HRESULT (*FILEWRITE)(FIL*,const void*,UINT,UINT*);
-HRESULT FileWrite(FIL* fp,const void* buff,UINT btw,UINT* bw);
+typedef HRESULT (*FILEWRITE)(FILE,const void*,UINT,UINT*);
+HRESULT FileWrite(FILE fp,const void* buff,UINT btw,UINT* bw);
 
 /*
 *
@@ -62,8 +62,19 @@ HRESULT FileWrite(FIL* fp,const void* buff,UINT btw,UINT* bw);
 * Arguments: 
 *
 */
-typedef HRESULT (*FILESEEK)(FIL*,FSIZE_t);
-HRESULT FileSeek(FIL* fp,FSIZE_t ofs);
+typedef HRESULT (*FILESEEK)(FILE,FSIZE_t);
+HRESULT FileSeek(FILE fp,FSIZE_t ofs);
+
+/*
+*
+* Name:FileTruncate
+* Subsystem:DOS
+* Description: 
+* Arguments: 
+*
+*/
+typedef HRESULT (*FILETRUNCATE)(FILE);
+HRESULT FileTruncate(FILE fp);
 
 /*
 *
@@ -73,8 +84,8 @@ HRESULT FileSeek(FIL* fp,FSIZE_t ofs);
 * Arguments: 
 *
 */
-typedef HRESULT (*DIROPEN)(DIR*,const TCHAR*);
-HRESULT DirOpen(DIR* dp,const TCHAR* path);
+typedef DIRECTORY (*DIROPEN)(LPCSTR);
+DIRECTORY DirOpen(LPCSTR path);
 
 /*
 *
@@ -84,8 +95,8 @@ HRESULT DirOpen(DIR* dp,const TCHAR* path);
 * Arguments: 
 *
 */
-typedef HRESULT (*DIRCLOSE)(DIR*);
-HRESULT DirClose(DIR* dp);
+typedef HRESULT (*DIRCLOSE)(DIRECTORY);
+HRESULT DirClose(DIRECTORY dp);
 
 /*
 *
@@ -95,8 +106,8 @@ HRESULT DirClose(DIR* dp);
 * Arguments: 
 *
 */
-typedef HRESULT (*FILEFINDFIRST)(DIR*,FILINFO*,const TCHAR*,const TCHAR*);
-HRESULT FileFindFirst(DIR* dp,FILINFO* fno,const TCHAR* path,const TCHAR* pattern);
+typedef HRESULT (*FILEFINDFIRST)(DIRECTORY,FILINFO*,const TCHAR*,const TCHAR*);
+HRESULT FileFindFirst(DIRECTORY dp,FILINFO* fno,const TCHAR* path,const TCHAR* pattern);
 
 /*
 *
@@ -106,8 +117,8 @@ HRESULT FileFindFirst(DIR* dp,FILINFO* fno,const TCHAR* path,const TCHAR* patter
 * Arguments: 
 *
 */
-typedef HRESULT (*FILEFINDNEXT)(DIR*,FILINFO*);
-HRESULT FileFindNext(DIR* dp,FILINFO* fno);
+typedef HRESULT (*FILEFINDNEXT)(DIRECTORY,FILINFO*);
+HRESULT FileFindNext(DIRECTORY dp,FILINFO* fno);
 
 /*
 *
@@ -117,8 +128,8 @@ HRESULT FileFindNext(DIR* dp,FILINFO* fno);
 * Arguments: 
 *
 */
-typedef HRESULT (*DIRCREATE)(const TCHAR*);
-HRESULT DirCreate(const TCHAR* path);
+typedef HRESULT (*DIRCREATE)(LPCSTR);
+HRESULT DirCreate(LPCSTR path);
 
 /*
 *
@@ -128,8 +139,8 @@ HRESULT DirCreate(const TCHAR* path);
 * Arguments: 
 *
 */
-typedef HRESULT (*FILEDELETE)(const TCHAR*);
-HRESULT FileDelete(const TCHAR* path);
+typedef HRESULT (*FILEDELETE)(LPCSTR);
+HRESULT FileDelete(LPCSTR path);
 
 /*
 *
@@ -139,8 +150,8 @@ HRESULT FileDelete(const TCHAR* path);
 * Arguments: 
 *
 */
-typedef HRESULT (*FILERENAME)(const TCHAR*,const TCHAR*);
-HRESULT FileRename(const TCHAR* path_old,const TCHAR* path_new);
+typedef HRESULT (*FILERENAME)(LPCSTR,LPCSTR);
+HRESULT FileRename(LPCSTR path_old,LPCSTR path_new);
 
 /*
 *
@@ -150,8 +161,8 @@ HRESULT FileRename(const TCHAR* path_old,const TCHAR* path_new);
 * Arguments: 
 *
 */
-typedef HRESULT (*FILEGETFREESPACE)(const TCHAR*,DWORD*,FATFS**);
-HRESULT FileGetFreeSpace(const TCHAR* path,DWORD* nclst,FATFS** fatfs);
+typedef HRESULT (*FILEGETFREESPACE)(LPCSTR,DWORD*,FATFS**);
+HRESULT FileGetFreeSpace(LPCSTR path,DWORD* nclst,FATFS** fatfs);
 
 /*
 *
@@ -161,8 +172,8 @@ HRESULT FileGetFreeSpace(const TCHAR* path,DWORD* nclst,FATFS** fatfs);
 * Arguments: 
 *
 */
-typedef HRESULT (*VOLUMEGETLABEL)(const TCHAR*,TCHAR*,DWORD*);
-HRESULT VolumeGetLabel(const TCHAR* path,TCHAR* label,DWORD* vsn);
+typedef HRESULT (*VOLUMEGETLABEL)(LPCSTR,TCHAR*,DWORD*);
+HRESULT VolumeGetLabel(LPCSTR path,TCHAR* label,DWORD* vsn);
 
 /*
 *
@@ -172,8 +183,8 @@ HRESULT VolumeGetLabel(const TCHAR* path,TCHAR* label,DWORD* vsn);
 * Arguments: 
 *
 */
-typedef HRESULT (*VOLUMESETLABEL)(const TCHAR*);
-HRESULT VolumeSetLabel(const TCHAR* label);
+typedef HRESULT (*VOLUMESETLABEL)(LPCSTR);
+HRESULT VolumeSetLabel(LPCSTR label);
 
 
 #endif

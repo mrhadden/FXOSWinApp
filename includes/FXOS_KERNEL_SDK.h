@@ -1,6 +1,6 @@
 /*
  * FXOS_KERNEL_SDK.h
- * Created Jul 29, 2021 10:49:43 PM
+ * Created Oct 14, 2021 1:43:24 PM
  *
  */
 
@@ -639,6 +639,28 @@ void GetHardwareRelease(char* buffer);
 
 /*
 *
+* Name:CriticalSectionEnter
+* Subsystem:KERNEL
+* Description: 
+* Arguments: 
+*
+*/
+typedef BOOL (*CRITICALSECTIONENTER)(VOID);
+BOOL CriticalSectionEnter(VOID);
+
+/*
+*
+* Name:CriticalSectionExit
+* Subsystem:KERNEL
+* Description: 
+* Arguments: 
+*
+*/
+typedef VOID (*CRITICALSECTIONEXIT)(VOID);
+VOID CriticalSectionExit(VOID);
+
+/*
+*
 * Name:MemoryCopy
 * Subsystem:KERNEL
 * Description: 
@@ -700,8 +722,8 @@ VOID MemoryUnlock(HANDLE handle);
 * Arguments: 
 *
 */
-typedef LPVOID (*HEAPALLOC)(UINT);
-LPVOID HeapAlloc(UINT size);
+typedef LPVOID (*HEAPALLOC)(ULONG);
+LPVOID HeapAlloc(ULONG size);
 
 /*
 *
@@ -1824,6 +1846,17 @@ LPCHAR StringReplace(LPCSTR s,LPCSTR old,LPCSTR new);
 */
 typedef INT (*STRINGINDEXOF)(LPCHAR,CHAR);
 INT StringIndexOf(LPCHAR chars,CHAR c);
+
+/*
+*
+* Name:StringEndsWith
+* Subsystem:KERNEL
+* Description: 
+* Arguments: 
+*
+*/
+typedef BOOL (*STRINGENDSWITH)(LPCSTR,LPCSTR);
+BOOL StringEndsWith(LPCSTR path,LPCSTR check);
 
 /*
 *
